@@ -1,0 +1,52 @@
+const request = require('supertest');
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
+import { app } from '../app';
+import jwt from 'jsonwebtoken';
+
+declare global {
+    var signUp: () => string[];
+}
+
+let mongo: any;
+
+beforeAll(async () => {
+    process.env.JWT_KEY = 'asdfasdf';
+    mongo = await MongoMemoryServer.create();
+    const mongoUri = await mongo.getUri();
+
+    await mongoose.connect(mongoUri, {});
+});
+
+beforeEach(async () => {
+    if (mongoose.connection.db) {
+        const collections = await mongoose.connection.db.collections();
+
+        for (let collection of collections) {
+            await collection.deleteMany({});
+        }
+    }
+
+});
+
+afterAll(async () => {
+    if (mongo) {
+        await mongo.stop();
+    }
+    await mongoose.connection.close();
+});
+
+global.signUp = () => {
+    const payload = {
+        id: '1dd1d122ed1d',
+        email: 'test@test.com'
+    }
+
+    const token = jwt.sign(payload, process.env.JWT_KEY!)
+    const session = { jwt: token }
+    const sessionJSON = JSON.stringify(session);
+
+    const base64 = Buffer.from(sessionJSON).toString('base64');
+
+    return [`session=${base64}`];
+}
