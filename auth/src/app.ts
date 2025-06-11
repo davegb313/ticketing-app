@@ -7,7 +7,7 @@ import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
-import { NotFoundError, errorHandler } from '@daviegb/ticketing-common';
+import { NotFoundError, errorHandler, currentUser } from '@daviegb/ticketing-common';
 
 const app = express();
 app.set('trust proxy', true);
