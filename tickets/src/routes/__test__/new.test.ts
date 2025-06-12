@@ -1,6 +1,6 @@
-const request = require('supertest');
+import request from 'supertest';
+import { Ticket } from '../../models/ticket';
 const { app } = require('../../app');
-const { Ticket } = require('../../models/ticket');
 
 it('has a route handler for /api/tickets with a post request', async () => {
   const response = await request(app).post('/api/tickets').send({});

@@ -1,10 +1,12 @@
-const request = require('supertest');
+import request from 'supertest';
 const { app } = require('../../app');
-const { Ticket } = require('../../models/ticket');
+import mongoose from 'mongoose';
 
 it('return a 404 if the ticket is not found', async () => {
+    const id = new mongoose.Types.ObjectId().toHexString();
+    
     await request(app)
-        .get('/api/tickets/sdfsdfs')
+        .get(`/api/tickets/${id}`)
         .send()
         .expect(404);
 });
@@ -20,8 +22,6 @@ it('returns a ticket if its found', async () => {
             title, price,
         })
         .expect(201);
-    
-        console.log(response.body);
         
     const ticketResponse = await request(app)
         .get(`/api/tickets/${response.body.id}`)
