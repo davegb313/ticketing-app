@@ -1,6 +1,7 @@
 const request = require('supertest');
 const { app } = require('../../app');
 import mongoose from 'mongoose';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('returns a 404 if provided id doesnt exist', async () => {
     const id = new mongoose.Types.ObjectId().toHexString();
@@ -95,11 +96,33 @@ it('updates the ticket provided valid inputs', async () => {
             price: 15
         })
         .expect(200)
-    
+
     const ticketResponse = await request(app)
         .get(`/api/tickets/${response.body.id}`)
         .send();
-    
+
     expect(ticketResponse.body.title).toEqual('new title');
     expect(ticketResponse.body.price).toEqual(15);
+});
+
+it('publishes an event', async () => {
+    const cookie = global.signUp();
+    const response = await request(app)
+        .post('/api/tickets')
+        .set('Cookie', cookie)
+        .send({
+            title: 'title',
+            price: 10
+        });
+
+    await request(app)
+        .put(`/api/tickets/${response.body.id}`)
+        .set('Cookie', cookie)
+        .send({
+            title: 'new title',
+            price: 15
+        })
+        .expect(200)
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

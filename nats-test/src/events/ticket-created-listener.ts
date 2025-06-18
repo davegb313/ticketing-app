@@ -5,7 +5,7 @@ import { TicketCreatedEvent } from '../../../../common/src/events/ticket-created
 
 export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
     readonly subject = Subjects.TicketCreated;
-    queueGroupName = 'tickets -service';
+    queueGroupName = 'tickets-service';
 
     onMessage(data: TicketCreatedEvent['data'], msg: Message) {
         console.log('event data', data);
