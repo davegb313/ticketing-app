@@ -6,6 +6,7 @@ import { errorHandler, NotFoundError, currentUser } from "@daviegb/ticketing-com
 import { newOrderRouter } from './routes/new';
 import { showOrderRouter } from './routes/show';
 import { indexOrderRouter } from './routes';
+import { deleteOrderRouter } from './routes/delete';
 
 
 
@@ -22,7 +23,7 @@ app.use(currentUser);
 app.use(newOrderRouter);
 app.use(showOrderRouter);
 app.use(indexOrderRouter);
-app.use(showOrderRouter);
+app.use(deleteOrderRouter);
 
 app.all('*', async () => {
     throw new NotFoundError();
