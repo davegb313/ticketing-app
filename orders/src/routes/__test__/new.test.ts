@@ -17,6 +17,7 @@ it('returns an error if the ticket does not exist', async () => {
 
 it('returns an error if the ticket is already reserved', async () => {
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'ticket',
         price: 20
     });
@@ -40,6 +41,7 @@ it('returns an error if the ticket is already reserved', async () => {
 
 it('returns a ticket', async () => {
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'ticket',
         price: 20
     });
@@ -55,6 +57,7 @@ it('returns a ticket', async () => {
 
 it('adds an event related test', async () => {
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'ticket',
         price: 20
     });
@@ -66,6 +69,6 @@ it('adds an event related test', async () => {
         .set('Cookie', global.signUp())
         .send({ ticketId: ticket.id })
         .expect(201);
-    
+
     expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
